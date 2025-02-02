@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <ul id="taskList"></ul>
+    <input type="text" id="taskInput" placeholder="Nouvelle tâche">
+    <button onclick="addTask()">Ajouter</button>
+
+    <script>
+        async function fetchTasks() {
+            let response = await fetch("http://127.0.0.1:8000/tasks");
+            let tasks = await response.json();
+            document.getElementById("taskList").innerHTML = tasks.map(t => 
+                `<li>${t.title} <button onclick="deleteTask(${t.id})">❌</button></li>`
+            ).join("");
+        }
+
+        async function addTask() {
+            let title = document.getElementById("taskInput").value;
+            let response = await fetch("http://127.0.0.1:8000/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: Date.now(), title: title, done: false })
+            });
+            document.getElementById("taskInput").value = "";
+            fetchTasks();
+        }
+
+        async function deleteTask(id) {
+            await fetch(`http://127.0.0.1:8000/tasks/${id}`, { method: "DELETE" });
+            fetchTasks();
+        }
+
+        fetchTasks();
+    </script>
+</body>
+</html>
