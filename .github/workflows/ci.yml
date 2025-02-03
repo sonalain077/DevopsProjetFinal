@@ -1,0 +1,58 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛠️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔹 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 Install dependencies
+        run: |
+          cd backend
+          pip install --no-cache-dir -r requirements.txt
+
+      - name: 🔍 Run backend tests
+        run: |
+          cd backend
+          pytest --maxfail=5 --disable-warnings --cov=.
+
+  docker-build:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛠️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐳 Build Docker images
+        run: |
+          docker-compose build
+
+      - name: 🏗️ Run containers
+        run: |
+          docker-compose up -d
+
+      - name: 🔄 Run tests in Docker
+        run: |
+          docker exec projet-backend pytest --cov=.
+
+      - name: 🛑 Stop containers
+        run: |
+          docker-compose down

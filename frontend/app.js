@@ -1,4 +1,5 @@
-const API_URL = "http://backend:8000/players/";
+const API_URL = "http://localhost:8000/players/";
+
 
 
 async function searchPlayer() {

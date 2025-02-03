@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  app_network:  # Explicitly define the network
+    driver: bridge
+
 services:
   db:
     image: postgres:latest
@@ -11,22 +15,28 @@ services:
       POSTGRES_DB: basket
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
 
   backend:
     build: ./backend
+    container_name: projet-backend
     ports:
       - "8000:8000"
     depends_on:
       - db
+    networks:
+      - app_network
 
   frontend:
     build: ./frontend
+    container_name: projet-frontend
     ports:
       - "8080:80"
     depends_on:
       - backend
+    networks:
+      - app_network
 
 volumes:
   postgres_data:
