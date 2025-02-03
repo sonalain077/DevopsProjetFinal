@@ -3,40 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do App</title>
+    <title>Recherche de Joueur NBA</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>To-Do List</h1>
-    <ul id="taskList"></ul>
-    <input type="text" id="taskInput" placeholder="Nouvelle tâche">
-    <button onclick="addTask()">Ajouter</button>
+    <div class="container">
+        <h1>🏀 Recherche de Joueur NBA</h1>
+        <input type="text" id="playerName" placeholder="Entrez un nom de joueur...">
+        <button onclick="searchPlayer()">Rechercher</button>
 
-    <script>
-        async function fetchTasks() {
-            let response = await fetch("http://127.0.0.1:8000/tasks");
-            let tasks = await response.json();
-            document.getElementById("taskList").innerHTML = tasks.map(t => 
-                `<li>${t.title} <button onclick="deleteTask(${t.id})">❌</button></li>`
-            ).join("");
-        }
+        <div id="playerInfo"></div>
+    </div>
 
-        async function addTask() {
-            let title = document.getElementById("taskInput").value;
-            let response = await fetch("http://127.0.0.1:8000/tasks", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: Date.now(), title: title, done: false })
-            });
-            document.getElementById("taskInput").value = "";
-            fetchTasks();
-        }
-
-        async function deleteTask(id) {
-            await fetch(`http://127.0.0.1:8000/tasks/${id}`, { method: "DELETE" });
-            fetchTasks();
-        }
-
-        fetchTasks();
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
