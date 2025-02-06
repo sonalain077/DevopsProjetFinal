@@ -1,6 +1,7 @@
 import psycopg2
 
-DATABASE_URL = "postgresql://user:password@db:5432/basket"
+DATABASE_URL = "postgresql://user:password@database:5432/basket"
+
 
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
