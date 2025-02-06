@@ -1,0 +1,33 @@
+name: CD Pipeline (Kubernetes)
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔑 Set up Kubernetes CLI (kubectl)
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: 🚀 Configure Kubernetes context
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: 🏗 Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/
+
+      - name: 📄 Vérifier les pods
+        run: |
+          kubectl get pods -o wide
