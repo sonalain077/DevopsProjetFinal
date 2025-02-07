@@ -26,7 +26,7 @@ jobs:
 
       - name: 🏗 Apply Kubernetes manifests
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f k8s/ --validate=false
 
       - name: 📄 Vérifier les pods
         run: |
