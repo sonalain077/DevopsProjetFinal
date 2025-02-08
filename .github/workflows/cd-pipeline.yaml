@@ -22,7 +22,8 @@ jobs:
       - name: 🚀 Configure Kubernetes context
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          export KUBECONFIG=kubeconfig
+          export KUBECONFIG=$(pwd)/kubeconfig
+          kubectl config current-context  # Étape de debug pour vérifier le contexte
 
       - name: 🏗 Apply Kubernetes manifests
         run: |
@@ -31,3 +32,4 @@ jobs:
       - name: 📄 Vérifier les pods
         run: |
           kubectl get pods -o wide
+
