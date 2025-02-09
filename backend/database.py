@@ -2,7 +2,7 @@ import psycopg2
 import time
 import sys
 
-DATABASE_URL = "postgresql://user:password@database:5432/basket"
+DATABASE_URL = "postgresql://user:password@localhost:5432/basket"
 
 def get_db_connection(retries=5, delay=5):
     """
